@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Bookings</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f5f5f5;
+background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60');
+background-size:cover;
+background-position:center;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+background:#ff4d4d;
+color:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 25px;
+}
+
+.logo{
+font-size:20px;
+font-weight:bold;
+}
+
+.nav-links{
+list-style:none;
+display:flex;
+gap:20px;
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+font-size:14px;
+}
+
+.nav-links a:hover{
+text-decoration:underline;
+}
+
+/* PAGE TITLE */
+
+h2{
+text-align:center;
+margin-top:30px;
+}
+
+/* TABLE */
+
+table{
+width:90%;
+margin:30px auto;
+border-collapse:collapse;
+background:white;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#333;
+color:white;
+}
+
+/* BUTTON */
+
+button{
+padding:6px 12px;
+background:red;
+border:none;
+color:white;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:darkred;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.navbar{
+flex-direction:column;
+gap:8px;
+}
+
+table{
+width:95%;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">🍽 Foodie</div>
+
+<ul class="nav-links">
+
+<li><a href="dashboard.html">Home</a></li>
+
+<li><a href="bookings.html">My Bookings</a></li>
+
+<li><a href="login.html">Logout</a></li>
+
+</ul>
+
+</div>
+
+<h2>My Bookings</h2>
+
+<table id="bookingTable">
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Restaurant</th>
+<th>Name</th>
+<th>Phone</th>
+<th>People</th>
+<th>Date</th>
+<th>Time</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+</tbody>
+
+</table>
+
+<script>
+
+/* LOAD BOOKINGS */
+
+function loadBookings(){
+
+fetch("http://localhost:8081/api/bookings")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+let table=document.querySelector("#bookingTable tbody");
+
+table.innerHTML="";
+
+data.forEach(b=>{
+
+let row=`
+<tr>
+<td>${b.id}</td>
+<td>${b.restaurantName}</td>
+<td>${b.customerName}</td>
+<td>${b.phone}</td>
+<td>${b.numberOfPeople}</td>
+<td>${b.bookingDate}</td>
+<td>${b.bookingTime}</td>
+<td>
+<button onclick="deleteBooking(${b.id})">
+Cancel
+</button>
+</td>
+</tr>
+`;
+
+table.innerHTML+=row;
+
+});
+
+});
+
+}
+
+/* DELETE BOOKING */
+
+function deleteBooking(id){
+
+if(confirm("Cancel this booking?")){
+
+fetch("http://localhost:8081/api/bookings/"+id,{
+method:"DELETE"
+})
+
+.then(()=>{
+
+alert("Booking Cancelled");
+
+loadBookings();
+
+});
+
+}
+
+}
+
+/* AUTO LOAD */
+
+window.onload=loadBookings;
+
+</script>
+
+</body>
+</html>

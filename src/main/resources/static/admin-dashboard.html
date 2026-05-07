@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60');
+background-size:cover;
+background-position:center;
+
+
+}
+
+.navbar{
+background:#ff4d4d;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+}
+
+.container{
+padding:30px;
+}
+
+.stats{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+table{
+width:100%;
+background:white;
+border-collapse:collapse;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+padding:6px 12px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<h2>Admin Dashboard</h2>
+
+<div>
+<a href="admin.html" style="color:white">Add Restaurant</a>
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="stats">
+
+<h3>Total Bookings : <span id="total"></span></h3>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Restaurant</th>
+<th>Date</th>
+<th>Time</th>
+<th>People</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="bookings">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+fetch("http://localhost:8081/api/bookings/all")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+document.getElementById("total").innerText=data.length;
+
+let table=document.getElementById("bookings");
+
+data.forEach(b=>{
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${b.id}</td>
+<td>${b.customerName}</td>
+<td>${b.restaurantName}</td>
+<td>${b.bookingDate}</td>
+<td>${b.bookingTime}</td>
+<td>${b.numberOfPeople}</td>
+
+<td>
+
+<button onclick="cancel(${b.id})">Cancel</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+});
+
+function cancel(id){
+
+fetch("http://localhost:8081/api/bookings/"+id,{
+
+method:"DELETE"
+
+})
+
+.then(()=>{
+
+alert("Booking Cancelled");
+
+location.reload();
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>
