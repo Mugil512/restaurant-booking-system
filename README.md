@@ -2,6 +2,10 @@
 
 A full-stack web application to view restaurants and book tables online.
 
+🚀 Live Backend API:
+http://localhost:8081/api/restaurants
+
+
 ## 🚀 Features
 - View restaurant list with images
 - View restaurant details
